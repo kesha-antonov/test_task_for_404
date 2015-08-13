@@ -15,6 +15,26 @@ class StudentsController < ApplicationController
     end
   end
 
+  def update
+    student = Student.find(params[:id])
+    if student && student.update_attributes(student_params)
+      render json: { status: 'success',
+                     status_text: 'Данные студента обновлены',
+                     student: student_json(student)[:student] }
+    else
+      render json: { status: 'error', status_text: 'При обновлении данных студента произошла ошибка' }
+    end
+  end
+
+  def destroy
+    student = Student.find(params[:id])
+    if student && student.destroy
+      render json: { status: 'success', status_text: 'Студент удалён' }
+    else
+      render json: { status: 'error', status_text: 'При удалении студента произошла ошибка' }
+    end
+  end
+
   private
 
     def student_params
@@ -25,21 +45,6 @@ class StudentsController < ApplicationController
                                       :email,
                                       :ip,
                                       :registered_at)
-    end
-
-    def student_json(student)
-      {
-        student: {
-          id: student.id,
-          first_name: student.first_name,
-          last_name: student.last_name,
-          study_group: student.study_group,
-          birthday: student.birthday,
-          email: student.email,
-          ip: student.ip,
-          registered_at: student.registered_at
-        }
-      }
     end
 
 end

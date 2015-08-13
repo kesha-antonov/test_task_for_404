@@ -24,14 +24,18 @@
           %th Email
           %th IP
           %th Дата регистрации
+          %th Действия
       %tbody
         - @students.each do |s|
-          %tr
-            %td= s.first_name
-            %td= s.last_name
-            %td= s.study_group
-            %td= s.birthday
-            %td= s.email
-            %td= s.ip
-            %td= s.registered_at
+          %tr{ class: "student-#{s.id}" }
+            %td.first_name= s.first_name
+            %td.last_name= s.last_name
+            %td.study_group= s.study_group
+            %td.birthday= s.birthday
+            %td.email= s.email
+            %td.ip= s.ip
+            %td.registered_at= s.registered_at
+            %td
+              = link_to 'Редактировать', '#', class: 'edit-student', data: { student: student_json(s)[:student] }
+              = link_to 'Удалить', student_path(s), method: :delete, data: { remote: true, type: 'json', confirm: 'Точно удалить?' }, class: 'delete-student'
 
