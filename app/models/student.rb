@@ -16,6 +16,10 @@
 
 class Student < ActiveRecord::Base
 
+  has_many :semesters, dependent: :destroy
+  has_many :semesters_disciplines, through: :semesters
+  has_many :disciplines, through: :semesters_disciplines
+
   validates :first_name,
             :last_name,
             :study_group,

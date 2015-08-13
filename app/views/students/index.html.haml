@@ -2,12 +2,36 @@
   .add-student
     %h2 Добавить студента
     = simple_form_for Student.new, data: { remote: true, type: 'json' }, method: 'post' do |s|
-      = s.input :first_name
-      = s.input :last_name
-      = s.input :study_group
-      = s.input :birthday
-      = s.input :email
-      = s.input :ip
-      = s.input :registered_at
+      = s.input :first_name, label: 'Имя:'
+      = s.input :last_name, label: 'Фамилия:'
+      = s.input :study_group, label: 'Группа:'
+      = s.input :birthday, label: 'Дата рождения:'
+      = s.input :email, label: 'Email:'
+      = s.input :ip, label: 'IP:'
+      = s.input :registered_at, label: 'Дата регистрации:'
       = s.submit 'Создать'
+
+
+  .students-list
+    %h2 Список последних добавленных студентов
+    %table
+      %thead
+        %tr
+          %th Имя
+          %th Фамилия
+          %th Группа
+          %th Дата рождения
+          %th Email
+          %th IP
+          %th Дата регистрации
+      %tbody
+        - @students.each do |s|
+          %tr
+            %td= s.first_name
+            %td= s.last_name
+            %td= s.study_group
+            %td= s.birthday
+            %td= s.email
+            %td= s.ip
+            %td= s.registered_at
 
