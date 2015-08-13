@@ -44,3 +44,7 @@ end
 gem 'puma'
 gem 'pg'
 gem 'dotenv-rails'
+gem 'haml-rails'
+gem 'quiet_assets'
+gem 'simple_form'
+gem 'annotate'

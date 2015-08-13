@@ -1,0 +1,13 @@
+.students
+  .add-student
+    %h2 Добавить студента
+    = simple_form_for Student.new, data: { remote: true, type: 'json' }, method: 'post' do |s|
+      = s.input :first_name
+      = s.input :last_name
+      = s.input :study_group
+      = s.input :birthday
+      = s.input :email
+      = s.input :ip
+      = s.input :registered_at
+      = s.submit 'Создать'
+
