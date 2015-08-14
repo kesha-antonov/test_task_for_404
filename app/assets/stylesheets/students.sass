@@ -13,20 +13,25 @@
   &.error
     border-color: red
 
-.students
+.students.left-container
+  float: left
+  width: 50%
+  border-right: 1px solid #eee
+  min-height: 100%
+  box-sizing: border-box
   > .add-student > form
     label
       width: 10em
       display: inline-block
   > .students-list
     margin-top: 2em
+
+.display-container.right-container
+  float: right
+  width: 50%
   > .student-popup
-    position: fixed
-    left: 20%
-    background: #eee
-    z-index: 500
     padding: 2em
-    border-radius: 1em
+    box-sizing: border-box
     form
       > .input > label
         width: 10em

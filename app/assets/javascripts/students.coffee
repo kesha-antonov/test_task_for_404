@@ -12,8 +12,11 @@ $ ->
   $students = $('.students')
   $students_list = $students.children '.students-list'
 
+  $display_container = $students.siblings '.display-container'
+
   popupEditStudent = (student) ->
-    $students.prepend "<div class='student-popup'>
+
+    $display_container.html "<div class='student-popup'>
         <a class='close' href='#'>Закрыть</a>
         <h3>Редактируем студента</h3>
         <form action='/students/#{student.id}' id='edit-student' data-remote='true' data-type='json' method='put'>
@@ -53,7 +56,38 @@ $ ->
         </form>
       </div>"
 
-  $students
+  popupShowStudent = (student) ->
+
+    $display_container.html "<div class='student-popup'>
+        <a class='close' href='#'>Закрыть</a>
+        <h3>Карточка студента</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Имя</th>
+              <th>Фамилия</th>
+              <th>Группа</th>
+              <th>Дата рождения</th>
+              <th>Email</th>
+              <th>IP</th>
+              <th>Дата регистрации</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>#{student.first_name}</td>
+              <td>#{student.last_name}</td>
+              <td>#{student.study_group}</td>
+              <td>#{student.birthday}</td>
+              <td>#{student.email}</td>
+              <td>#{student.ip}</td>
+              <td>#{student.registered_at}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>"
+
+  $('body')
     .on 'ajax:success', (e, data) ->
       showFlash data
       if e.target.nodeName is 'FORM'
@@ -92,6 +126,10 @@ $ ->
         e.preventDefault()
         $target = $(e.target)
         popupEditStudent $target.data('student')
+      else if /show\-student/.test(e.target.className)
+        e.preventDefault()
+        $target = $(e.target)
+        popupShowStudent $target.data('student')
       else if /close/.test(e.target.className) and /student\-popup/.test(e.target.parentNode.className)
         e.preventDefault()
         $(e.target).parent().remove()

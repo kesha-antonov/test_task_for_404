@@ -1,4 +1,4 @@
-.students
+.students.left-container
   .add-student
     %h2 Добавить студента
     = simple_form_for Student.new, data: { remote: true, type: 'json' }, method: 'post' do |s|
@@ -36,6 +36,8 @@
             %td.ip= s.ip
             %td.registered_at= s.registered_at
             %td
+              = link_to 'Подробнее', '#', class: 'show-student', data: { student: student_json(s)[:student] }
               = link_to 'Редактировать', '#', class: 'edit-student', data: { student: student_json(s)[:student] }
               = link_to 'Удалить', student_path(s), method: :delete, data: { remote: true, type: 'json', confirm: 'Точно удалить?' }, class: 'delete-student'
 
+.display-container.right-container
