@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150813181320) do
+ActiveRecord::Schema.define(version: 20150814132439) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,12 +23,13 @@ ActiveRecord::Schema.define(version: 20150813181320) do
   end
 
   create_table "semesters", force: :cascade do |t|
-    t.integer  "name",           default: 1
-    t.text     "characteristic", default: ""
+    t.integer  "name",              default: 1
+    t.text     "characteristic",    default: ""
     t.float    "avg_mark"
     t.integer  "student_id"
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.integer  "disciplines_count", default: 0
   end
 
   add_index "semesters", ["avg_mark"], name: "index_semesters_on_avg_mark", using: :btree

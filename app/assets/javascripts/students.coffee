@@ -16,12 +16,24 @@ $ ->
 
   popupEditStudent = (student) ->
 
+    draw_discipline = (discipline) ->
+      "<div class='input'>
+        <label>#{discipline.name}</label>
+        <input type='string' value='#{discipline.mark}'  name='student[semesters_attributes][][semesters_disciplines_attributes][][mark]' >
+        <input type='hidden' value='#{discipline.semester_id}' name='student[semesters_attributes][][semesters_disciplines_attributes][][semester_id]' >
+        <input type='hidden' value='#{discipline.discipline_id}' name='student[semesters_attributes][][semesters_disciplines_attributes][][discipline_id]' >
+        <input type='hidden' value='#{discipline.id}' name='student[semesters_attributes][][semesters_disciplines_attributes][][id]' >
+      </div>"
+
     draw_semester = (semester) ->
       "<div class='input'>
         <label>Номер семестра</label>
         <input type='hidden' name='student[semesters_attributes][][id]' value='#{semester.id}'>
         <input type='string' name='student[semesters_attributes][][name]' value='#{semester.name}'>
+        <input type='string' name='student[semesters_attributes][][characteristic]' value='#{semester.characteristic}' placeholder='Характеристика...'>
         <a href='#' class='delete-semester' data-semester-id='#{semester.id}'>Удалить</a>
+        #{draw_discipline(discipline) for discipline in semester.disciplines}
+        <a style='display:block;' href='#' class='add-discipline' data-semester-id='#{semester.id}'>Добавить предмет</a>
       </div>"
 
     $display_container.html "<div class='student-popup'>
@@ -114,6 +126,7 @@ $ ->
           </tr>"
         else if e.target.id is 'edit-student'
           $student = $students.find("tr.student-#{data.student.id}")
+          popupEditStudent data.student
           if $student.length
             $student
               .children 'td.first_name'
@@ -132,6 +145,23 @@ $ ->
               .text data.student.registered_at
       else if /delete\-student/.test(e.target.className)
         $(e.target).parent().parent().remove()
+      else if /get\-high\-(?:rated|registrated)/.test(e.target.className)
+        e.preventDefault()
+        $tbody = $(e.target)
+          .siblings 'table'
+          .children 'tbody'
+        $tbody.html ''
+        for student in data.students
+          $tbody.append "<tr>
+            <td>#{student.first_name}</td>
+            <td>#{student.last_name}</td>
+            <td>#{student.study_group}</td>
+            <td>#{student.birthday}</td>
+            <td>#{student.email}</td>
+            <td>#{student.ip}</td>
+            <td>#{student.registered_at}</td>
+            #{if student.avg_mark? then "<td>#{student.avg_mark}</td>" else ''}
+          </tr>"
     .on 'click', (e) ->
       if /edit\-student/.test(e.target.className)
         e.preventDefault()
@@ -165,5 +195,14 @@ $ ->
           .parent()
           .css 'display', 'none'
         $target.before "<input type='hidden' name='student[semesters_attributes][][_destroy]' value='1'>"
-
+      else if /add\-discipline/.test(e.target.className)
+        e.preventDefault()
+        $target = $(e.target)
+        $target.before "<div class='input disciplines-container'>
+            <select name='student[semesters_attributes][][semesters_disciplines_attributes][][discipline_id]'>
+              #{"<option value='#{discipline.id}'>#{discipline.name}</option>" for discipline in $students.data('disciplines')}
+            </select>
+            <input type='string' value='5' name='student[semesters_attributes][][semesters_disciplines_attributes][][mark]' >
+            <input type='hidden' value='#{$target.data('semesterId')}' name='student[semesters_attributes][][semesters_disciplines_attributes][][semester_id]' >
+          </div>"
 

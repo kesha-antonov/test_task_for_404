@@ -1,7 +1,7 @@
 class StudentsController < ApplicationController
 
   def index
-    @students = Student.order(created_at: :desc).limit(10)
+    @students = Student.includes(semesters: {semesters_disciplines: :discipline}).order(created_at: :desc).limit(10)
   end
 
   def create
@@ -44,6 +44,23 @@ class StudentsController < ApplicationController
     end
   end
 
+  def high_rated
+    render json: { status: 'success',
+                   status_text: 'Данные получены',
+                   students: Student.includes(semesters: {semesters_disciplines: :discipline}).joins(:semesters).where.not(semesters: {avg_mark: nil}).group('students.id').order('max(semesters.avg_mark) DESC').limit(10).map{|student| student_json(student)[:student] }
+                 }
+  end
+
+  def high_registrated
+    students = Student.where(ip: Student.select(:ip).group(:ip).having('COUNT(ip) > 1'))
+    students = [] unless students.joins(:semesters).where.not(semesters: {characteristic: ''}).count.nonzero?
+    p students.inspect
+    render json: { status: 'success',
+                   status_text: 'Данные получены',
+                   students: students
+                 }
+  end
+
   private
 
     def student_params
@@ -57,8 +74,17 @@ class StudentsController < ApplicationController
                                       semesters_attributes: [
                                         :id,
                                         :name,
-                                        :_destroy
-                                      ])
+                                        :characteristic,
+                                        :_destroy,
+                                        semesters_disciplines_attributes: [
+                                          :id,
+                                          :semester_id,
+                                          :discipline_id,
+                                          :mark,
+                                          :_destroy
+                                        ]
+                                      ]
+                                      )
     end
 
 end

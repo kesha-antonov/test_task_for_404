@@ -16,7 +16,23 @@ class ApplicationController < ActionController::Base
         email: student.email,
         ip: student.ip,
         registered_at: student.registered_at,
-        semesters: student.semesters.map{|s| { id: s.id, name: s.name } }
+        avg_mark: student.semesters.map(&:avg_mark).join(', '),
+        semesters: student.semesters.map{|s|
+          {
+            id: s.id,
+            name: s.name,
+            characteristic: s.characteristic,
+            disciplines: s.semesters_disciplines.map{|sd|
+              {
+                id: sd.id,
+                discipline_id: sd.discipline_id,
+                name: sd.discipline.name,
+                mark: sd.mark,
+                semester_id: s.id
+              }
+            }
+          }
+        }
       }
     }
   end
