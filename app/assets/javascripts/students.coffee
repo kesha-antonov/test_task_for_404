@@ -113,7 +113,8 @@ $ ->
   $('body')
     .on 'ajax:success', (e, data) ->
       showFlash data
-      if e.target.nodeName is 'FORM'
+      console.log
+      if e.target.nodeName is 'FORM' and not /search\-students/.test(e.target.className)
         if e.target.id is 'new_student'
           $students_list.find('> table > tbody').prepend "<tr class='student-#{data.student.id}'>
             <td class='first_name'>#{data.student.first_name}</td>
@@ -145,7 +146,8 @@ $ ->
               .text data.student.registered_at
       else if /delete\-student/.test(e.target.className)
         $(e.target).parent().parent().remove()
-      else if /get\-high\-(?:rated|registrated)/.test(e.target.className)
+      else if /(?:search\-students|get\-high\-(?:rated|registrated))/.test(e.target.className)
+        console.log 1
         e.preventDefault()
         $tbody = $(e.target)
           .siblings 'table'

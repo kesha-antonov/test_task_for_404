@@ -54,10 +54,21 @@ class StudentsController < ApplicationController
   def high_registrated
     students = Student.where(ip: Student.select(:ip).group(:ip).having('COUNT(ip) > 1'))
     students = [] unless students.joins(:semesters).where.not(semesters: {characteristic: ''}).count.nonzero?
-    p students.inspect
     render json: { status: 'success',
                    status_text: 'Данные получены',
                    students: students
+                 }
+  end
+
+  def search
+    students = Student.with_name( params[:search][:name] )
+                      .with_group( params[:search][:with_group] )
+                      .with_semester_name( params[:search][:semester] )
+                      .with_avg_mark_down( params[:search][:avg_mark_down] )
+                      .with_avg_mark_up( params[:search][:avg_mark_up] )
+    render json: { status: 'success',
+                   status_text: 'Данные получены',
+                   students: students.map{|student| student_json(student)[:student] }
                  }
   end
 

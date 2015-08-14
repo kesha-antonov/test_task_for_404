@@ -71,7 +71,7 @@
 
   .search-with-filters
     %h2 Поиск студентов по фильтрам
-    = simple_form_for :student, method: 'get', data: { remote: true, type: 'json' } do |ss|
+    = simple_form_for :search, url: '/students/search', method: 'get', data: { remote: true, type: 'json' }, html: { class: 'search-students' } do |ss|
       = ss.input :name, label: 'Имя и/или фамилия:', required: false
       = ss.input :study_group, label: 'Группа:', required: false
       = ss.input :semester, label: 'Семестр:', required: false
@@ -88,8 +88,6 @@
           %th Email
           %th IP
           %th Дата регистрации
-          %th Семестр
-          %th Средний балл
       %tbody
 
 .display-container.right-container
