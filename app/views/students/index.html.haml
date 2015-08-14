@@ -30,6 +30,7 @@
           %th IP
           %th Дата регистрации
           %th Средний балл
+          %th Действия
       %tbody
         - students.each do |s|
           %tr
@@ -41,6 +42,7 @@
             %td.ip= s.ip
             %td.registered_at= s.registered_at
             %td.avg_mark= s.semesters.map(&:avg_mark).join(', ')
+            %td= link_to 'Подробности', '#', class: 'show-student', data: { student: s }
 
   .filter-with-ip-and-characteristic
     %h2 Выборка всех студентов, с IP которых произошло более одной регистрации, и при этом хотя бы у одного из них написана характеристика научного руководителя
@@ -57,6 +59,7 @@
           %th Email
           %th IP
           %th Дата регистрации
+          %th Действия
       %tbody
         - students.each do |s|
           %tr
@@ -67,6 +70,7 @@
             %td.email= s.email
             %td.ip= s.ip
             %td.registered_at= s.registered_at
+            %td= link_to 'Подробности', '#', class: 'show-student', data: { student: s }
 
 
   .search-with-filters
@@ -88,6 +92,7 @@
           %th Email
           %th IP
           %th Дата регистрации
+          %th Действия
       %tbody
 
 .display-container.right-container

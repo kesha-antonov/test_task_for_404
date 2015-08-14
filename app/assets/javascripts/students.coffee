@@ -81,39 +81,69 @@ $ ->
 
   popupShowStudent = (student) ->
 
+    draw_discipline = (discipline) ->
+      "<div>
+        <div>
+          <label>Название</label>
+          <input disabled='disabled' value='#{discipline.name}'>
+          <label>Оценка</label>
+          <input disabled='disabled' value='#{if discipline.mark? then discipline.mark else 'Отсутствует'}'>
+        </div>
+      </div>"
+
+    draw_semester = (semester) ->
+      "<div class='semester'>
+        <div>
+          <label>Название</label>
+          <input disabled='disabled' value='#{semester.name}'>
+        </div>
+        <div>
+          <label>Средняя оценка</label>
+          <input disabled='disabled' value='#{if semester.avg_mark? then semester.avg_mark else 'Отсутствует'}'>
+        </div>
+        <div>
+          <label>Характеристика</label>
+          <input disabled='disabled' value='#{if semester.characteristic? then semester.characteristic else 'Отсутствует'}'>
+        </div>
+        <div class='disciplines'>
+          #{draw_discipline(discipline) for discipline in semester.disciplines}
+        </div>
+      </div>"
+
     $display_container.html "<div class='student-popup'>
         <a class='close' href='#'>Закрыть</a>
         <h3>Карточка студента</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Имя</th>
-              <th>Фамилия</th>
-              <th>Группа</th>
-              <th>Дата рождения</th>
-              <th>Email</th>
-              <th>IP</th>
-              <th>Дата регистрации</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>#{student.first_name}</td>
-              <td>#{student.last_name}</td>
-              <td>#{student.study_group}</td>
-              <td>#{student.birthday}</td>
-              <td>#{student.email}</td>
-              <td>#{student.ip}</td>
-              <td>#{student.registered_at}</td>
-            </tr>
-          </tbody>
-        </table>
+        <div class='card'>
+          <div class='head'>
+            <span>Имя</span>
+            <span>Фамилия</span>
+            <span>Группа</span>
+            <span>Дата рождения</span>
+            <span>Email</span>
+            <span>IP</span>
+            <span>Дата регистрации</span>
+          </div>
+          <div class='body'>
+            <div>
+              <span>#{student.first_name}</span>
+              <span>#{student.last_name}</span>
+              <span>#{student.study_group}</span>
+              <span>#{student.birthday}</span>
+              <span>#{student.email}</span>
+              <span>#{student.ip}</span>
+              <span>#{student.registered_at}</span>
+            </div>
+            <div>
+              Семестры:
+              #{draw_semester(semester) for semester in student.semesters}
+            </div>
+          </div>
+        </div class='card'>
       </div>"
 
   $('body')
     .on 'ajax:success', (e, data) ->
       showFlash data
-      console.log
       if e.target.nodeName is 'FORM' and not /search\-students/.test(e.target.className)
         if e.target.id is 'new_student'
           $students_list.find('> table > tbody').prepend "<tr class='student-#{data.student.id}'>
@@ -147,7 +177,6 @@ $ ->
       else if /delete\-student/.test(e.target.className)
         $(e.target).parent().parent().remove()
       else if /(?:search\-students|get\-high\-(?:rated|registrated))/.test(e.target.className)
-        console.log 1
         e.preventDefault()
         $tbody = $(e.target)
           .siblings 'table'
@@ -162,7 +191,8 @@ $ ->
             <td>#{student.email}</td>
             <td>#{student.ip}</td>
             <td>#{student.registered_at}</td>
-            #{if student.avg_mark? then "<td>#{student.avg_mark}</td>" else ''}
+            #{if student.avg_mark? and e.target.nodeName isnt 'FORM' then "<td>#{student.avg_mark}</td>" else ''}
+            <td><a href='#' class='show-student' data-student='#{JSON.stringify(student)}'>Подробности</a></td>
           </tr>"
     .on 'click', (e) ->
       if /edit\-student/.test(e.target.className)

@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
+  include ActionView::Helpers::NumberHelper
   helper_method :student_json
 
   def student_json(student)
@@ -16,12 +17,13 @@ class ApplicationController < ActionController::Base
         email: student.email,
         ip: student.ip,
         registered_at: student.registered_at,
-        avg_mark: student.semesters.map(&:avg_mark).join(', '),
+        avg_mark: student.semesters.map{|s| number_with_precision(s.avg_mark, precision: 2) }.join(', '),
         semesters: student.semesters.map{|s|
           {
             id: s.id,
             name: s.name,
             characteristic: s.characteristic,
+            avg_mark: s.avg_mark,
             disciplines: s.semesters_disciplines.map{|sd|
               {
                 id: sd.id,
