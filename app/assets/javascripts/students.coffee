@@ -134,7 +134,7 @@ $ ->
               <span>#{student.registered_at}</span>
             </div>
             <div>
-              Семестры:
+              #{if student.semesters.length then 'Семестры:' else ''}
               #{draw_semester(semester) for semester in student.semesters}
             </div>
           </div>
@@ -154,6 +154,11 @@ $ ->
             <td class='email'>#{data.student.email}</td>
             <td class='ip'>#{data.student.ip}</td>
             <td class='registered_at'>#{data.student.registered_at}</td>
+            <td>
+              <a href='#' class='show-student' data-student='#{JSON.stringify(data.student)}'>Подробности</a>
+              <a href='#' class='edit-student' data-student='#{JSON.stringify(data.student)}'>Редактировать</a>
+              <a href='/students/#{data.student.id}' class='delete-student' data-remote='true' data-type='json' data-confirm='Точно удалить?' data-method='delete'>Удалить</a>
+            </td>
           </tr>"
         else if e.target.id is 'edit-student'
           $student = $students.find("tr.student-#{data.student.id}")

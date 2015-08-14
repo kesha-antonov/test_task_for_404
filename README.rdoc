@@ -4,7 +4,7 @@ How to test app:
 
 * bundle install
 
-* create .env in root of project with LOCAL_DB_USERNAME and LOCAL_DB_PASSWORD keys
+* create .env in root of project with LOCAL_DB_USERNAME and LOCAL_DB_PASSWORD keys for your local postgresql
 
 * rake db:create db:migrate db:seed
 

@@ -31,7 +31,6 @@ class SemestersDiscipline < ActiveRecord::Base
   protected
 
     def update_avg_mark
-      p semester.inspect
       SemestersDiscipline.transaction do
         semester.lock!
         semester.semesters_disciplines.lock(true)
