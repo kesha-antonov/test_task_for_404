@@ -47,7 +47,7 @@
   .filter-with-ip-and-characteristic
     %h2 Выборка всех студентов, с IP которых произошло более одной регистрации, и при этом хотя бы у одного из них написана характеристика научного руководителя
     = link_to 'Обновить', high_registrated_students_path, method: 'get', data: { remote: true, type: 'json' }, class: 'get-high-registrated'
-    - students = Student.where(ip: Student.select(:ip).group(:ip).having('COUNT(ip) > 1'))
+    - students = Student.where(ip: Student.select(:ip).group(:ip).having('COUNT(ip) > 1')).limit(10)
     - students = [] unless students.joins(:semesters).where.not(semesters: {characteristic: ''}).count.nonzero?
     %table
       %thead
