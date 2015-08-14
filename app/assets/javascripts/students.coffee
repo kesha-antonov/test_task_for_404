@@ -16,6 +16,14 @@ $ ->
 
   popupEditStudent = (student) ->
 
+    draw_semester = (semester) ->
+      "<div class='input'>
+        <label>Номер семестра</label>
+        <input type='hidden' name='student[semesters_attributes][][id]' value='#{semester.id}'>
+        <input type='string' name='student[semesters_attributes][][name]' value='#{semester.name}'>
+        <a href='#' class='delete-semester' data-semester-id='#{semester.id}'>Удалить</a>
+      </div>"
+
     $display_container.html "<div class='student-popup'>
         <a class='close' href='#'>Закрыть</a>
         <h3>Редактируем студента</h3>
@@ -52,6 +60,9 @@ $ ->
             <label>Дата регистрации: </label>
             <input name='student[registered_at]' value='#{student.registered_at}'>
           </div>
+          <h4>Семестры</h4>
+          #{draw_semester(semester) for semester in student.semesters}
+          <a href='#' class='add-semester' style='display:block;margin-bottom:1em;'>Добавить семестр</a>
           <input type='submit' value='Сохранить'>
         </form>
       </div>"
@@ -125,7 +136,15 @@ $ ->
       if /edit\-student/.test(e.target.className)
         e.preventDefault()
         $target = $(e.target)
-        popupEditStudent $target.data('student')
+        $.ajax "/students/#{$target.data('student').id}",
+          method: 'get'
+          type: 'json'
+          success: (data) ->
+            if data.status is 'success'
+              popupEditStudent data.student
+            else
+              showFlash data
+
       else if /show\-student/.test(e.target.className)
         e.preventDefault()
         $target = $(e.target)
@@ -133,3 +152,18 @@ $ ->
       else if /close/.test(e.target.className) and /student\-popup/.test(e.target.parentNode.className)
         e.preventDefault()
         $(e.target).parent().remove()
+      else if /add\-semester/.test(e.target.className)
+        e.preventDefault()
+        $(e.target).before "<div class='input'>
+          <label>Номер семестра</label>
+          <input name='student[semesters_attributes][][name]' value=''>
+        </div>"
+      else if /delete\-semester/.test(e.target.className)
+        e.preventDefault()
+        $target = $(e.target)
+        $target
+          .parent()
+          .css 'display', 'none'
+        $target.before "<input type='hidden' name='student[semesters_attributes][][_destroy]' value='1'>"
+
+

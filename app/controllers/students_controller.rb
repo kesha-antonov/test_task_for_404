@@ -15,6 +15,15 @@ class StudentsController < ApplicationController
     end
   end
 
+  def show
+    student = Student.includes(:semesters).find(params[:id])
+    if student.persisted?
+      render json: { status: 'success', student: student_json(student)[:student] }
+    else
+      render json: { status: 'error', status_text: 'Студент не найден' }
+    end
+  end
+
   def update
     student = Student.find(params[:id])
     if student && student.update_attributes(student_params)
@@ -44,7 +53,12 @@ class StudentsController < ApplicationController
                                       :birthday,
                                       :email,
                                       :ip,
-                                      :registered_at)
+                                      :registered_at,
+                                      semesters_attributes: [
+                                        :id,
+                                        :name,
+                                        :_destroy
+                                      ])
     end
 
 end

@@ -18,7 +18,6 @@ class Semester < ActiveRecord::Base
 
   validates :name,
             :student_id,
-            :avg_mark,
     presence: true
 
 end

@@ -17,6 +17,7 @@
 class Student < ActiveRecord::Base
 
   has_many :semesters, dependent: :destroy
+  accepts_nested_attributes_for :semesters, allow_destroy: true
   has_many :semesters_disciplines, through: :semesters
   has_many :disciplines, through: :semesters_disciplines
 

@@ -1,5 +1,6 @@
 .flash
   position: fixed
+  background: #fff
   width: 300px
   left: 50%
   margin-left: -150px
@@ -13,18 +14,22 @@
   &.error
     border-color: red
 
+label
+  width: 10em
+  display: inline-block
+
 .students.left-container
   float: left
   width: 50%
   border-right: 1px solid #eee
   min-height: 100%
   box-sizing: border-box
-  > .add-student > form
-    label
-      width: 10em
-      display: inline-block
-  > .students-list
-    margin-top: 2em
+  padding-bottom: 10em
+  > .students-list,
+  > .high-rated-list,
+  > .filter-with-ip-and-characteristic,
+  > .search-with-filters
+    margin-top: 4em
 
 .display-container.right-container
   float: right
@@ -32,7 +37,3 @@
   > .student-popup
     padding: 2em
     box-sizing: border-box
-    form
-      > .input > label
-        width: 10em
-        display: inline-block

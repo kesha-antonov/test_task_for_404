@@ -1,0 +1,25 @@
+%table
+  %thead
+    %tr
+      %th Имя
+      %th Фамилия
+      %th Группа
+      %th Дата рождения
+      %th Email
+      %th IP
+      %th Дата регистрации
+      %th Действия
+  %tbody
+    - students.each do |s|
+      %tr{ class: "student-#{s.id}" }
+        %td.first_name= s.first_name
+        %td.last_name= s.last_name
+        %td.study_group= s.study_group
+        %td.birthday= s.birthday
+        %td.email= s.email
+        %td.ip= s.ip
+        %td.registered_at= s.registered_at
+        %td
+          = link_to 'Подробнее', '#', class: 'show-student', data: { student: student_json(s)[:student] }
+          = link_to 'Редактировать', '#', class: 'edit-student', data: { student: student_json(s)[:student] }
+          = link_to 'Удалить', student_path(s), method: :delete, data: { remote: true, type: 'json', confirm: 'Точно удалить?' }, class: 'delete-student'

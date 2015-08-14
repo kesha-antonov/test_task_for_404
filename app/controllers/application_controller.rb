@@ -15,7 +15,8 @@ class ApplicationController < ActionController::Base
         birthday: student.birthday,
         email: student.email,
         ip: student.ip,
-        registered_at: student.registered_at
+        registered_at: student.registered_at,
+        semesters: student.semesters.map{|s| { id: s.id, name: s.name } }
       }
     }
   end

@@ -11,9 +11,26 @@
       = s.input :registered_at, label: 'Дата регистрации:'
       = s.submit 'Создать'
 
-
   .students-list
     %h2 Список последних добавленных студентов
+    = render 'table', students: @students
+
+  .high-rated-list
+    %h2 Список студентов с наивысшим средним баллом
+    = render 'table', students: Student.joins(:semesters).group('students.id').order('max(semesters.avg_mark) DESC').limit(10)
+
+  .filter-with-ip-and-characteristic
+    %h2 Выборка всех студентов, с IP которых произошло более одной регистрации, и при этом хотя бы у одного из них написана характеристика научного руководителя
+
+  .search-with-filters
+    %h2 Поиск студентов по фильтрам
+    = simple_form_for :student, method: 'get', data: { remote: true, type: 'json' } do |ss|
+      = ss.input :name, label: 'Имя и/или фамилия:', required: false
+      = ss.input :study_group, label: 'Группа:', required: false
+      = ss.input :semester, label: 'Семестр:', required: false
+      = ss.input :avg_mark_down, label: 'Средний балл(от):', required: false
+      = ss.input :avg_mark_up, label: 'Средний балл(до):', required: false
+      = ss.submit 'Найти', data: { disable_with: 'Ищем...' }
     %table
       %thead
         %tr
@@ -24,20 +41,8 @@
           %th Email
           %th IP
           %th Дата регистрации
-          %th Действия
+          %th Семестр
+          %th Средний балл
       %tbody
-        - @students.each do |s|
-          %tr{ class: "student-#{s.id}" }
-            %td.first_name= s.first_name
-            %td.last_name= s.last_name
-            %td.study_group= s.study_group
-            %td.birthday= s.birthday
-            %td.email= s.email
-            %td.ip= s.ip
-            %td.registered_at= s.registered_at
-            %td
-              = link_to 'Подробнее', '#', class: 'show-student', data: { student: student_json(s)[:student] }
-              = link_to 'Редактировать', '#', class: 'edit-student', data: { student: student_json(s)[:student] }
-              = link_to 'Удалить', student_path(s), method: :delete, data: { remote: true, type: 'json', confirm: 'Точно удалить?' }, class: 'delete-student'
 
 .display-container.right-container

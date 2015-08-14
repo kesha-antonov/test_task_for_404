@@ -6,6 +6,6 @@ How to test app:
 
 * create .env in root of project with LOCAL_DB_USERNAME and LOCAL_DB_PASSWORD keys
 
-* rake db:create db:migrate
+* rake db:create db:migrate db:seed
 
 * rails s
